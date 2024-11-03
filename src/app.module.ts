@@ -1,10 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { UserController } from './user.controller';
+import { CreateUserUseCase } from './use-case/create-user.use-case';
+import { UserRepository } from './port/user-repository.port';
+import { InMemoryUserRepository } from './adatper/outcoming/repository/in-memory-user.repository';
+import { GetUsersUseCase } from './use-case/get-users.use-case';
 
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [UserController],
+  providers: [
+    CreateUserUseCase,
+    {
+      provide: UserRepository,
+      useClass: InMemoryUserRepository,
+    },
+    GetUsersUseCase,
+  ],
 })
 export class AppModule {}
