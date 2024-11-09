@@ -19,7 +19,14 @@ export class InMemoryUserRepository implements UserRepository {
       id: `${this.users.length + 1}`,
     };
     this.users.push(createdUserDto);
-    console.log(this.users);
     return createdUserDto;
+  }
+
+  async delete(id: string): Promise<void> {
+    this.users = this.users.filter((user) => user.id !== id);
+  }
+
+  async getById(id: string): Promise<CreatedUserDto> {
+    return this.users.find((user) => user.id === id) || null;
   }
 }
