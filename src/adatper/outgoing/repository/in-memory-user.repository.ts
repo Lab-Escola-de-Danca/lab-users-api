@@ -9,7 +9,7 @@ export class InMemoryUserRepository implements UserRepository {
   private users: UserDto[] = [];
 
   async findAll(): Promise<UserDto[]> {
-    const users = this.users;
+    const users = this.users.slice();
     return users;
   }
 

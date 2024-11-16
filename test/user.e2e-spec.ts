@@ -25,6 +25,35 @@ describe('User', () => {
     await app.init();
   });
 
+  it('POST /user', async () => {
+    const userData = {
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    };
+    repository.create(userData);
+    return request(app.getHttpServer())
+      .post('/users')
+      .send(userData)
+      .expect(HttpStatus.CREATED);
+  });
+
+  it('GET /users', async () => {
+    const userData = await repository.create({
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    });
+    const response = await request(app.getHttpServer())
+      .get('/users')
+      .expect(HttpStatus.OK);
+    expect(response.body).toBeDefined();
+    const createdUser = response.body.find(
+      (user: CreatedUserDto) => user.id === userData.id,
+    );
+    expect(createdUser).toBeDefined();
+  });
+  test.todo('GET /users/:id');
+  test.todo('UPDATE /users/:id');
+
   it(`DELETE users/{id}`, async () => {
     user = await repository.create({
       email: faker.internet.email(),

@@ -2,14 +2,21 @@ import { createMock } from '@golevelup/ts-jest';
 import { UserDto } from './dto/user.dto';
 import { DeleteUserUseCase } from './use-case/delete-user.use-case';
 import { UserController } from './user.controller';
+import { GetUsersUseCase } from './use-case/get-users.use-case';
 
 describe('UserController', () => {
   let userController: UserController;
   let deleteUserUseCase: DeleteUserUseCase;
+  let getUsersUseCase: GetUsersUseCase;
 
   beforeEach(() => {
     deleteUserUseCase = createMock<DeleteUserUseCase>();
-    userController = new UserController(null, null, deleteUserUseCase);
+    getUsersUseCase = createMock<GetUsersUseCase>();
+    userController = new UserController(
+      null,
+      getUsersUseCase,
+      deleteUserUseCase,
+    );
   });
 
   describe('deleteUser', () => {
@@ -22,6 +29,14 @@ describe('UserController', () => {
 
       expect(deleteUserUseCase.execute).toHaveBeenCalledTimes(1);
       expect(deleteUserUseCase.execute).toHaveBeenCalledWith(user.id);
+    });
+  });
+
+  describe('getUsers', () => {
+    it('should execute get users use case', async () => {
+      await userController.getUsers();
+
+      expect(getUsersUseCase.execute).toHaveBeenCalledTimes(1);
     });
   });
 });
